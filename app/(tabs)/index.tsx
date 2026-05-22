@@ -5,6 +5,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useColorScheme } from '@/components/useColorScheme';
 import Colors from '@/constants/Colors';
 import { BlurView } from 'expo-blur';
+import { router } from 'expo-router';
 
 import AttendanceGauge from '@/components/Home/AttendanceGauge';
 import QuickAccessIcon from '@/components/Home/QuickAccessIcon';
@@ -87,7 +88,18 @@ export default function HomeScreen() {
           <SectionHeader title="QUICK ACCESS" />
           <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.quickAccessList}>
             {QUICK_ACCESS.map((item) => (
-              <QuickAccessIcon key={item.id} name={item.name} icon={item.icon} />
+              <QuickAccessIcon 
+                key={item.id} 
+                name={item.name} 
+                icon={item.icon} 
+                onPress={() => {
+                  if (item.name === 'Academic Summary') {
+                    router.push('/grades');
+                  } else {
+                    router.push('/explore');
+                  }
+                }}
+              />
             ))}
           </ScrollView>
         </View>

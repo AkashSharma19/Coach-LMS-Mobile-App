@@ -279,6 +279,42 @@ export const MOCK_COURSES: Course[] = [
           { criteria: 'Policy recommendations and strategic efficiency critique', points: '30 Pts' },
           { criteria: 'Academic formatting and prose elegance', points: '10 Pts' }
         ]
+      },
+      { 
+        id: '1_3',
+        title: 'Problem Set 3: Signaling Mechanisms', 
+        dueDate: 'May 22, 2026', 
+        status: 'pending', 
+        weight: '10%', 
+        totalScore: '100',
+        description: 'Solve analytical signaling models. Characterize signaling costs and separating payoffs.',
+        instructions: [
+          'Calculate separating constraints for standard Spence job market signaling games.',
+          'Compute high-type and low-type education cost multipliers.'
+        ],
+        resources: [],
+        rubric: [
+          { criteria: 'Separating equilibrium derivation', points: '60 Pts' },
+          { criteria: 'Comparative statics analysis', points: '40 Pts' }
+        ]
+      },
+      { 
+        id: '1_4',
+        title: 'Problem Set 4: Adverse Selection', 
+        dueDate: 'May 15, 2026', 
+        status: 'pending', 
+        weight: '10%', 
+        totalScore: '100',
+        description: 'Deconstruct models of adverse selection in competitive markets.',
+        instructions: [
+          'Illustrate market breakdown in Akerlof lemons models.',
+          'Model Spence separating contracts.'
+        ],
+        resources: [],
+        rubric: [
+          { criteria: 'Lemons market equilibrium calculations', points: '50 Pts' },
+          { criteria: 'Rothschild-Stiglitz contract modeling', points: '50 Pts' }
+        ]
       }
     ],
     term: 'Spring 2026',
@@ -915,6 +951,84 @@ export const MOCK_COURSES: Course[] = [
       }
     ],
     term: 'Fall 2025',
+    classType: 'OutClass'
+  },
+  {
+    id: '5',
+    code: 'ECON-401',
+    title: 'Development Economics',
+    topic: 'Institutions, Infrastructure, and Global Growth',
+    instructor: { name: 'Dr. Robert Vance', initials: 'RV' },
+    progress: 0.50,
+    grade: 'A',
+    attendance: 90,
+    nextClass: 'Tomorrow, 10:00 AM',
+    location: 'Room 207, 2nd floor - CDS',
+    category: 'OUTCLASS',
+    status: 'in-progress',
+    color: '#FFB300',
+    objective: 'Explore structural bottlenecks in emerging market economies, focusing on global institutional health, public infrastructure, and policy interventions.',
+    evaluationCriteria: [
+      { name: 'Policy Brief', weight: '40%' },
+      { name: 'Final Exam', weight: '60%' }
+    ],
+    sessions: [
+      { 
+        topic: 'Institutions & Economic Growth', 
+        subtopic: 'Property rights, legal frameworks, and long-run development paths',
+        date: 'May 11', 
+        time: '10:00 AM - 11:30 AM',
+        status: 'P',
+        type: 'Online',
+        feedbackStatus: 'submitted',
+        objective: 'Analyze how property rights protect capital accumulation and foster investment.',
+        recordingUrl: 'https://coach-lms.edu/recordings/econ401-s1.mp4',
+        faculty: 'Dr. Robert Vance',
+        programAssociate: 'Sarah Jenkins'
+      },
+      { 
+        topic: 'Infrastructure, Trade, and Globalization', 
+        subtopic: 'Impact of transport corridors, port efficiencies, and tariff barriers',
+        date: 'May 14', 
+        time: '10:00 AM - 11:30 AM',
+        status: 'P',
+        type: 'Offline',
+        feedbackStatus: 'pending',
+        objective: 'Measure trade cost elasticities and port efficiency impacts on international integration.',
+        recordingUrl: 'https://coach-lms.edu/recordings/econ401-s2.mp4',
+        faculty: 'Dr. Robert Vance',
+        programAssociate: 'Sarah Jenkins'
+      },
+      { 
+        topic: 'Foreign Aid & Macro Policy', 
+        subtopic: 'Conditional cash transfers, credit constraints, and microfinance strategies',
+        date: 'May 18', 
+        time: '10:00 AM - 11:30 AM',
+        status: 'A',
+        type: 'Hybrid',
+        feedbackStatus: 'pending',
+        objective: 'Critique microfinance impact trials and assess macroeconomic conditional aid programs.',
+        recordingUrl: 'https://coach-lms.edu/recordings/econ401-s3.mp4',
+        faculty: 'Dr. Robert Vance',
+        programAssociate: 'Sarah Jenkins'
+      }
+    ],
+    assignments: [
+      { 
+        id: '5_0',
+        title: 'Institutional Comparison Paper', 
+        dueDate: 'June 05, 2026', 
+        status: 'pending', 
+        weight: '40%', 
+        totalScore: '100',
+        description: 'Perform a comparative historical institutional audit between two emerging economies.',
+        instructions: [
+          'Deconstruct formal and informal property protections.',
+          'Model resource allocations under varying corruption indexes.'
+        ]
+      }
+    ],
+    term: 'Spring 2026',
     classType: 'OutClass'
   }
 ];

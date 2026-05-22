@@ -11,6 +11,7 @@ import { Text, View } from '@/components/Themed';
 import { Ionicons } from '@expo/vector-icons';
 import { useColorScheme } from '@/components/useColorScheme';
 import Colors from '@/constants/Colors';
+import { router } from 'expo-router';
 
 interface ModuleItem {
   id: string;
@@ -42,7 +43,17 @@ const MODULES: ModuleItem[] = [
   { id: 'events', name: 'Events', description: 'Forums, webinars & summits', icon: 'megaphone', color: '#FF453A', category: 'Community' },
 ];
 
-const CATEGORIES = ['All', 'Academics', 'Utilities', 'Community'] as const;
+const CATEGORY_ICONS: Record<'Academics' | 'Utilities' | 'Community', keyof typeof Ionicons.glyphMap> = {
+  'Academics': 'school-outline',
+  'Utilities': 'construct-outline',
+  'Community': 'people-outline',
+};
+
+const CATEGORY_COLORS: Record<'Academics' | 'Utilities' | 'Community', string> = {
+  'Academics': '#EBC063',
+  'Utilities': '#4A90E2',
+  'Community': '#30D158',
+};
 
 export default function ExploreScreen() {
   const colorScheme = useColorScheme() ?? 'dark';
@@ -50,14 +61,10 @@ export default function ExploreScreen() {
 
   // States
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState<typeof CATEGORIES[number]>('All');
 
   // Main filtered module list
   const filteredModules = useMemo(() => {
     return MODULES.filter(item => {
-      // Category Chip Filter
-      if (selectedCategory !== 'All' && item.category !== selectedCategory) return false;
-      
       // Search Box Filter
       if (searchQuery.trim() === '') return true;
       const query = searchQuery.toLowerCase();
@@ -67,7 +74,10 @@ export default function ExploreScreen() {
         item.category.toLowerCase().includes(query)
       );
     });
-  }, [searchQuery, selectedCategory]);
+  }, [searchQuery]);
+
+  // Get active categories to display
+  const activeCategories = ['Academics', 'Utilities', 'Community'] as const;
 
   return (
     <View style={[styles.container, { backgroundColor: c.background }]}>
@@ -109,57 +119,9 @@ export default function ExploreScreen() {
           </DefaultView>
         </View>
 
-        {/* Horizontal Category Chips */}
-        <DefaultView style={{ backgroundColor: 'transparent', marginBottom: 18 }}>
-          <ScrollView 
-            horizontal 
-            showsHorizontalScrollIndicator={false} 
-            contentContainerStyle={styles.chipsContent}
-          >
-            {CATEGORIES.map(category => {
-              const isSelected = selectedCategory === category;
-              const count = category === 'All' 
-                ? MODULES.length 
-                : MODULES.filter(m => m.category === category).length;
 
-              return (
-                <TouchableOpacity
-                  key={category}
-                  style={[
-                    styles.chip,
-                    { 
-                      backgroundColor: isSelected ? c.gold : c.card + '80', 
-                      borderColor: isSelected ? c.gold : c.border 
-                    }
-                  ]}
-                  onPress={() => setSelectedCategory(category)}
-                >
-                  <Text 
-                    variant={isSelected ? "bold" : "medium"} 
-                    style={[
-                      styles.chipText,
-                      { color: isSelected ? '#000000' : c.textSecondary }
-                    ]}
-                  >
-                    {category} <Text style={{ fontSize: 9, color: isSelected ? 'rgba(0,0,0,0.6)' : c.textSecondary + '70' }}>({count})</Text>
-                  </Text>
-                </TouchableOpacity>
-              );
-            })}
-          </ScrollView>
-        </DefaultView>
 
-        {/* Regular Modules Grid Heading */}
-        <DefaultView style={styles.sectionTitleRow}>
-          <Text variant="bold" style={{ fontSize: 12, color: c.textSecondary, letterSpacing: 0.8, textTransform: 'uppercase' }}>
-            {searchQuery ? 'SEARCH RESULTS' : 'AVAILABLE UTILITIES'}
-          </Text>
-          <Text variant="medium" style={{ fontSize: 11, color: c.textSecondary }}>
-            Showing {filteredModules.length} modules
-          </Text>
-        </DefaultView>
-
-        {/* Module responsive 2-column Grid */}
+        {/* Module responsive 2-column Grid divided by Category */}
         {filteredModules.length === 0 ? (
           <DefaultView style={[styles.emptyCard, { backgroundColor: c.card + '60', borderColor: c.border }]}>
             <Ionicons name="search-outline" size={40} color={c.textSecondary + '40'} />
@@ -167,54 +129,100 @@ export default function ExploreScreen() {
               No Modules Found
             </Text>
             <Text variant="medium" style={{ fontSize: 11, color: c.textSecondary, marginTop: 4, textAlign: 'center', paddingHorizontal: 20 }}>
-              Try searching different keywords or selecting other categories chips.
+              Try searching different keywords.
             </Text>
           </DefaultView>
         ) : (
-          <DefaultView style={styles.gridContainer}>
-            {filteredModules.map((item) => {
-              return (
-                <TouchableOpacity
-                  key={item.id}
-                  activeOpacity={0.7}
-                  style={[
-                    styles.moduleCard,
-                    { 
-                      backgroundColor: c.card, 
-                      borderColor: c.border,
-                      borderWidth: 1
-                    }
-                  ]}
-                >
-                  {/* Top card row */}
-                  <DefaultView style={styles.cardHeaderRow}>
-                    <DefaultView style={[styles.iconCircle, { backgroundColor: item.color + '12' }]}>
-                      <Ionicons name={item.icon} size={18} color={item.color} />
-                    </DefaultView>
-                  </DefaultView>
+          activeCategories.map((category) => {
+            const categoryModules = filteredModules.filter(m => m.category === category);
+            if (categoryModules.length === 0) return null;
 
-                  {/* Body description */}
-                  <DefaultView style={{ marginTop: 14, backgroundColor: 'transparent' }}>
-                    <Text variant="bold" style={[styles.moduleName, { color: c.text }]} numberOfLines={1}>
-                      {item.name}
-                    </Text>
-                    <Text variant="medium" style={[styles.moduleDesc, { color: c.textSecondary, marginTop: 2 }]} numberOfLines={1}>
-                      {item.description}
+            return (
+              <DefaultView key={category} style={styles.sectionContainer}>
+                {/* Category Header */}
+                <DefaultView style={styles.categoryHeader}>
+                  <DefaultView style={styles.categoryHeaderLeft}>
+                    <DefaultView style={[styles.categoryIconCircle, { backgroundColor: CATEGORY_COLORS[category] + '12' }]}>
+                      <Ionicons 
+                        name={CATEGORY_ICONS[category]} 
+                        size={15} 
+                        color={CATEGORY_COLORS[category]} 
+                      />
+                    </DefaultView>
+                    <Text variant="bold" style={[styles.categoryTitle, { color: c.text }]}>
+                      {category}
                     </Text>
                   </DefaultView>
-
-                  {/* Category mini-badge */}
-                  <DefaultView style={{ flexDirection: 'row', marginTop: 10, backgroundColor: 'transparent' }}>
-                    <DefaultView style={[styles.catBadge, { backgroundColor: c.cardSecondary, borderColor: c.border, borderWidth: 1 }]}>
-                      <Text variant="bold" style={{ fontSize: 7, color: c.textSecondary, textTransform: 'uppercase' }}>
-                        {item.category}
-                      </Text>
-                    </DefaultView>
+                  <DefaultView style={[styles.categoryCountBadge, { backgroundColor: c.cardSecondary, borderColor: c.border }]}>
+                    <Text variant="bold" style={[styles.categoryCountText, { color: c.textSecondary }]}>
+                      {categoryModules.length} {categoryModules.length === 1 ? 'module' : 'modules'}
+                    </Text>
                   </DefaultView>
-                </TouchableOpacity>
-              );
-            })}
-          </DefaultView>
+                </DefaultView>
+
+                {/* Module responsive 2-column Grid for this category */}
+                <DefaultView style={styles.gridContainer}>
+                  {categoryModules.map((item) => {
+                    return (
+                      <TouchableOpacity
+                        key={item.id}
+                        activeOpacity={0.7}
+                        onPress={() => {
+                          if (item.id === 'course') {
+                            router.push('/courses');
+                          } else if (item.id === 'schedule') {
+                            router.push('/schedule');
+                          } else if (item.id === 'attendance') {
+                            router.push('/attendance');
+                          } else if (item.id === 'grades' || item.id === 'academic-summary') {
+                            router.push('/grades');
+                          } else if (item.id === 'assignments') {
+                            router.push('/assignments');
+                          } else if (item.id === 'repository') {
+                            router.push('/repository');
+                          }
+                        }}
+                        style={[
+                          styles.moduleCard,
+                          { 
+                            backgroundColor: c.card, 
+                            borderColor: c.border,
+                            borderWidth: 1
+                          }
+                        ]}
+                      >
+                        {/* Top card row */}
+                        <DefaultView style={styles.cardHeaderRow}>
+                          <DefaultView style={[styles.iconCircle, { backgroundColor: item.color + '12' }]}>
+                            <Ionicons name={item.icon} size={18} color={item.color} />
+                          </DefaultView>
+                        </DefaultView>
+
+                        {/* Body description */}
+                        <DefaultView style={{ marginTop: 14, backgroundColor: 'transparent' }}>
+                          <Text variant="bold" style={[styles.moduleName, { color: c.text }]} numberOfLines={1}>
+                            {item.name}
+                          </Text>
+                          <Text variant="medium" style={[styles.moduleDesc, { color: c.textSecondary, marginTop: 2 }]} numberOfLines={1}>
+                            {item.description}
+                          </Text>
+                        </DefaultView>
+
+                        {/* Category mini-badge */}
+                        <DefaultView style={{ flexDirection: 'row', marginTop: 10, backgroundColor: 'transparent' }}>
+                          <DefaultView style={[styles.catBadge, { backgroundColor: c.cardSecondary, borderColor: c.border, borderWidth: 1 }]}>
+                            <Text variant="bold" style={{ fontSize: 7, color: c.textSecondary, textTransform: 'uppercase' }}>
+                              {item.category}
+                            </Text>
+                          </DefaultView>
+                        </DefaultView>
+                      </TouchableOpacity>
+                    );
+                  })}
+                </DefaultView>
+              </DefaultView>
+            );
+          })
         )}
 
         {/* Space Bottom */}
@@ -277,21 +285,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontFamily: 'Outfit-Medium',
   },
-  chipsContent: {
-    paddingRight: 20,
-    gap: 8,
-  },
-  chip: {
-    paddingHorizontal: 14,
-    paddingVertical: 8,
-    borderRadius: 20,
-    borderWidth: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  chipText: {
-    fontSize: 12,
-  },
+
   sectionTitleRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -344,5 +338,49 @@ const styles = StyleSheet.create({
     paddingHorizontal: 6,
     paddingVertical: 2,
     borderRadius: 5,
+  },
+  sectionContainer: {
+    marginBottom: 24,
+    backgroundColor: 'transparent',
+  },
+  categoryHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 12,
+    marginTop: 4,
+    backgroundColor: 'transparent',
+  },
+  categoryHeaderLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    backgroundColor: 'transparent',
+  },
+  categoryIconCircle: {
+    width: 28,
+    height: 28,
+    borderRadius: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  categoryTitle: {
+    fontSize: 15,
+    fontFamily: 'Outfit-Bold',
+    letterSpacing: 0.3,
+  },
+  categoryCountBadge: {
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 6,
+    borderWidth: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  categoryCountText: {
+    fontSize: 9,
+    fontFamily: 'Outfit-Bold',
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
   },
 });
