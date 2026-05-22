@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "coach-lms-temp",
-    "slug": "coach-lms-temp",
+    "name": "Coach LMS",
+    "slug": "coach-lms",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "coachlmstemp",
+    "scheme": "coach-lms",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "splash": {
