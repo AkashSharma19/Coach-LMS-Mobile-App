@@ -19,7 +19,7 @@ export default function QuickAccessIcon({ name, icon, onPress }: QuickAccessIcon
   return (
     <TouchableOpacity style={styles.container} activeOpacity={0.7} onPress={onPress}>
       <LinearGradient
-        colors={[c.card, '#121212']}
+        colors={[c.card, c.background]}
         style={[styles.iconWrapper, { borderColor: c.border }]}
       >
         <Ionicons name={icon} size={24} color={c.gold} />

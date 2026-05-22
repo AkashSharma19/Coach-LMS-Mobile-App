@@ -174,12 +174,16 @@ export default function ExploreScreen() {
                             router.push('/schedule');
                           } else if (item.id === 'attendance') {
                             router.push('/attendance');
-                          } else if (item.id === 'grades' || item.id === 'academic-summary') {
+                          } else if (item.id === 'grades') {
                             router.push('/grades');
+                          } else if (item.id === 'academic-summary') {
+                            router.push('/academic-summary');
                           } else if (item.id === 'assignments') {
                             router.push('/assignments');
                           } else if (item.id === 'repository') {
                             router.push('/repository');
+                          } else if (item.id === 'events') {
+                            router.push('/events');
                           }
                         }}
                         style={[
@@ -206,15 +210,6 @@ export default function ExploreScreen() {
                           <Text variant="medium" style={[styles.moduleDesc, { color: c.textSecondary, marginTop: 2 }]} numberOfLines={1}>
                             {item.description}
                           </Text>
-                        </DefaultView>
-
-                        {/* Category mini-badge */}
-                        <DefaultView style={{ flexDirection: 'row', marginTop: 10, backgroundColor: 'transparent' }}>
-                          <DefaultView style={[styles.catBadge, { backgroundColor: c.cardSecondary, borderColor: c.border, borderWidth: 1 }]}>
-                            <Text variant="bold" style={{ fontSize: 7, color: c.textSecondary, textTransform: 'uppercase' }}>
-                              {item.category}
-                            </Text>
-                          </DefaultView>
                         </DefaultView>
                       </TouchableOpacity>
                     );

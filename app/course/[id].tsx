@@ -18,7 +18,7 @@ import { MOCK_COURSES, Session, Assignment } from '../../constants/MockData';
 import { useAssignmentSubmissions } from '../../store/assignmentStore';
 
 export default function CourseDetailsScreen() {
-  const { id } = useLocalSearchParams();
+  const { id, sessionIndex } = useLocalSearchParams();
   const colorScheme = useColorScheme() ?? 'dark';
   const c = Colors[colorScheme];
 
@@ -35,6 +35,17 @@ export default function CourseDetailsScreen() {
 
   // Dynamic Assignment Submissions Shared State Hook
   const assignmentSubmissions = useAssignmentSubmissions();
+
+  React.useEffect(() => {
+    if (sessionIndex !== undefined && course) {
+      const idx = parseInt(sessionIndex as string, 10);
+      if (!isNaN(idx) && course.sessions[idx]) {
+        setActiveTab('sessions');
+        setSelectedSession({ ...course.sessions[idx], index: idx });
+        setIsSessionModalVisible(true);
+      }
+    }
+  }, [sessionIndex, id]);
 
   if (!course) {
     return (

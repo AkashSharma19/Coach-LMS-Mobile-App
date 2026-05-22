@@ -70,6 +70,10 @@ function RootLayoutNav() {
         <Stack.Screen name="assignment/[assignmentId]" options={{ headerShown: false }} />
         <Stack.Screen name="assignments" options={{ headerShown: false }} />
         <Stack.Screen name="repository" options={{ headerShown: false }} />
+        <Stack.Screen name="events" options={{ headerShown: false }} />
+        <Stack.Screen name="academic-summary" options={{ headerShown: false }} />
+        <Stack.Screen name="credit-audit" options={{ headerShown: false }} />
+        <Stack.Screen name="session-details" options={{ headerShown: false }} />
         <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
       </Stack>
     </ThemeProvider>

@@ -39,7 +39,7 @@ export default function AttendanceGauge({ percentage }: AttendanceGaugeProps) {
   return (
     <TouchableOpacity activeOpacity={0.9} style={styles.cardWrapper}>
       <ExpoLinearGradient
-        colors={[c.card, '#151515']}
+        colors={[c.card, c.background]}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
         style={[styles.container, { borderColor: c.border }]}
